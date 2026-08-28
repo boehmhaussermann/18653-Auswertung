@@ -1,151 +1,82 @@
-import matplotlib.pyplot as plt
-import pandas as pd
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+import pandas as pd
 
 def plot_last_cycle(
     sheet_name: str,
     last_cycle: pd.DataFrame,
     mean_curve: pd.DataFrame,
+    output_folder: Path,
 ) -> None:
-    """
-    Plot the two halves of the last cycle and their mean force curve.
-    """
+    """Save the last cycle and mean force curves as a PNG."""
 
     plt.figure(figsize=(12, 6))
 
     # Original last cycle
-    plt.plot(
+    """ plt.plot(
         last_cycle["distance"],
         last_cycle["load"],
-        color="lightgray",
-        linewidth=1,
-        label="Last cycle",
-    )
+        color="#7A8793",
+        linewidth=0.75,
+        alpha=0.65,
+        label="Messdaten",
+    ) """
 
     # First half
     plt.plot(
         mean_curve["distance"],
         mean_curve["first_half_force"],
-        color="blue",
-        linewidth=1.5,
-        label="First half",
+        color="#2F5597",
+        linewidth=1.25,
+        label="Loading",
     )
 
     # Second half
     plt.plot(
         mean_curve["distance"],
         mean_curve["second_half_force"],
-        color="green",
-        linewidth=1.5,
-        label="Second half",
+        color="#548235",
+        linewidth=1.00,
+        label="Unloading",
     )
 
-    # Mean
+    # Mean force
     plt.plot(
         mean_curve["distance"],
         mean_curve["mean_force"],
-        color="red",
-        linewidth=2,
-        label="Mean force",
+        color="#005B96",
+        linewidth=1.50,
+        label="Mean Force",
     )
 
-    plt.title(f"{sheet_name} – letzter Zyklus")
-    plt.xlabel("Distance")
-    plt.ylabel("Load")
-
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-
-    plt.savefig(...)
-    plt.close()
-
-def plot_last_cycle(
-    sheet_name: str,
-    last_cycle: pd.DataFrame,
-    mean_curve: pd.DataFrame,
-    output_folder: Path,
-) -> None:
-
-    plt.figure(figsize=(12, 6))
-
-    plt.plot(
-        last_cycle["distance"],
-        last_cycle["load"],
-        linewidth=1,
-        alpha=0.5,
-        label="Messdaten",
+    plt.title(
+        f"{sheet_name}",
+        fontsize=14,
+        fontweight="bold",
     )
 
-    plt.plot(
-        mean_curve["distance"],
-        mean_curve["mean_force"],
-        linewidth=2,
-        label="Mittlere Kraft",
+    plt.xlabel(
+        "Distance [mm]",
+        fontsize=11,
     )
 
-    plt.title(sheet_name)
-    plt.xlabel("Distance")
-    plt.ylabel("Load")
-
-    plt.grid(True)
-    plt.legend()
-
-    plt.tight_layout()
-
-    output_file = (
-        output_folder
-        / f"{sheet_name}_Auswertung.png"
+    plt.ylabel(
+        "Force [N]",
+        fontsize=11,
     )
 
-    plt.savefig(
-        output_file,
-        dpi=300,
-        bbox_inches="tight",
+    plt.grid(
+        True,
+        color="#D9DEE3",
+        linewidth=0.7,
+        alpha=0.8,
     )
 
-    plt.close()
-
-from pathlib import Path
-
-import matplotlib.pyplot as plt
-import pandas as pd
-
-
-def plot_last_cycle(
-    sheet_name: str,
-    last_cycle: pd.DataFrame,
-    mean_curve: pd.DataFrame,
-    output_folder: Path,
-) -> None:
-    """Save the last cycle and mean force curve as a PNG."""
-
-    plt.figure(figsize=(12, 6))
-
-    # Original measurement data
-    plt.plot(
-        last_cycle["distance"],
-        last_cycle["load"],
-        linewidth=1,
-        alpha=0.5,
-        label="Messdaten",
+    plt.legend(
+        frameon=False,
     )
 
-    # Mean force curve
-    plt.plot(
-        mean_curve["distance"],
-        mean_curve["mean_force"],
-        linewidth=2,
-        label="Mittlere Kraft",
-    )
-
-    plt.title(sheet_name)
-    plt.xlabel("Distance")
-    plt.ylabel("Load")
-
-    plt.grid(True)
-    plt.legend()
     plt.tight_layout()
 
     output_file = (
@@ -160,4 +91,6 @@ def plot_last_cycle(
 
     plt.close()
 
-    print(f"Diagramm gespeichert: {output_file}")
+    print(
+        f"Diagramm gespeichert: {output_file}"
+    )

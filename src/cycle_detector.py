@@ -399,3 +399,38 @@ def print_values_around(
             ]
         ].to_string(index=False)
     )
+
+def calculate_force_range(
+    data: pd.DataFrame,
+    L1: float,
+    L2: float,
+) -> tuple[float, float, float]:
+    """
+    Find Fmax, Fmin and the force difference between L2 and L1.
+
+    Uses the raw measurement data from the last cycle.
+
+    Returns:
+        Fmax, Fmin, tolerance
+    """
+
+    lower = min(L1, L2)
+    upper = max(L1, L2)
+
+    section = data[
+        (data["distance"] >= lower)
+        & (data["distance"] <= upper)
+    ]
+
+    if section.empty:
+        raise ValueError(
+            f"Keine Messwerte zwischen "
+            f"L2={L2:.6f} und L1={L1:.6f} gefunden."
+        )
+
+    Fmax = section["load"].max()
+    Fmin = section["load"].min()
+
+    tolerance = Fmax - Fmin
+
+    return Fmax, Fmin, tolerance

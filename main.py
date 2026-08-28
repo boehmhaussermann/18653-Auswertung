@@ -1,12 +1,13 @@
 import pandas as pd
 
 from src.cycle_detector import (
+    calculate_force_range,
     calculate_l1_l2,
     calculate_mean_force_curve,
     find_cycle_starts,
     get_last_cycle,
-    print_values_around,
 )
+
 
 
 from src.excel_reader import load_workbook
@@ -96,6 +97,13 @@ def main() -> None:
                 mean_curve
             )
 
+            Fmax, Fmin, tolerance = calculate_force_range(
+                last_cycle,
+                L1,
+                L2,
+            )
+
+
             results.append(
                 {
                     "Sheet": sheet_name,
@@ -103,8 +111,12 @@ def main() -> None:
                     "F1": F1,
                     "L2": L2,
                     "F2": F2,
+                    "Fmax": Fmax,
+                    "Fmin": Fmin,
+                    "Tolerance": tolerance,
                 }
             )
+
 
         except ValueError as error:
 
@@ -119,6 +131,8 @@ def main() -> None:
                     "F1": None,
                     "L2": None,
                     "F2": None,
+                    "Fmax": None,
+                    "Fmin": None,
                 }
             )
 
@@ -140,39 +154,43 @@ def main() -> None:
     # Result summary
     # ============================================================
 
-        if results:
+    if results:
 
-            results_df = pd.DataFrame(results)
+        results_df = pd.DataFrame(results)
 
-            print("\n\n==============================================")
-            print("ERGEBNISÜBERSICHT")
-            print("==============================================")
+        print("\n\n==============================================")
+        print("ERGEBNISÜBERSICHT")
+        print("==============================================")
 
-            print(
-                results_df.to_string(
-                    index=False,
-                    formatters={
-                        "L1": lambda x: "-" if pd.isna(x) else f"{x:.6f}",
-                        "F1": lambda x: "-" if pd.isna(x) else f"{x:.3f}",
-                        "L2": lambda x: "-" if pd.isna(x) else f"{x:.6f}",
-                        "F2": lambda x: "-" if pd.isna(x) else f"{x:.3f}",
-                    },
-                )
-            )
-            results_csv = (
-                export_folder / "Ergebnisübersicht.csv"
-            )
-
-            results_df.to_csv(
-                results_csv,
+        print(
+            results_df.to_string(
                 index=False,
-                sep=";",
-                decimal=",",
+                formatters={
+                    "L1": lambda x: "-" if pd.isna(x) else f"{x:.6f}",
+                    "F1": lambda x: "-" if pd.isna(x) else f"{x:.3f}",
+                    "L2": lambda x: "-" if pd.isna(x) else f"{x:.6f}",
+                    "F2": lambda x: "-" if pd.isna(x) else f"{x:.3f}",
+                    "Fmax": lambda x: "-" if pd.isna(x) else f"{x:.3f}",
+                    "Fmin": lambda x: "-" if pd.isna(x) else f"{x:.3f}",
+                    "Tolerance": lambda x: "-" if pd.isna(x) else f"{x:.3f}",
+                },
             )
+        )
 
-            print(
-                f"CSV gespeichert: {results_csv}"
-            )
+        results_csv = (
+            export_folder / "Ergebnisübersicht.csv"
+        )
+
+        results_df.to_csv(
+            results_csv,
+            index=False,
+            sep=";",
+            decimal=",",
+        )
+
+        print(
+            f"CSV gespeichert: {results_csv}"
+        )
 
 
 
