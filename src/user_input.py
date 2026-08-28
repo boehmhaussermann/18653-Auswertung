@@ -1,20 +1,17 @@
 from pathlib import Path
-
 from tkinter import Tk
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askdirectory, askopenfilename
 
 
 def select_excel_file() -> Path:
-    """Open a file dialog and let the user select an Excel file."""
+    """Open a file dialog and let the user choose an Excel file."""
 
     root = Tk()
     root.withdraw()
 
     file_path = askopenfilename(
         title="Messdatei auswählen",
-        filetypes=[
-            ("Excel-Dateien", "*.xlsx"),
-        ],
+        filetypes=[("Excel-Dateien", "*.xlsx")]
     )
 
     root.destroy()
@@ -25,22 +22,19 @@ def select_excel_file() -> Path:
     return Path(file_path)
 
 
-def get_setting_cycles() -> int:
-    """Ask the user how many setting cycles were performed."""
+def select_export_folder() -> Path:
+    """Ask the user where plots and results should be saved."""
 
-    while True:
-        try:
-            cycles = int(
-                input("Wie häufig wurde gesetzt? ")
-            )
+    root = Tk()
+    root.withdraw()
 
-            if cycles < 0:
-                print(
-                    "Bitte eine positive ganze Zahl eingeben."
-                )
-                continue
+    folder_path = askdirectory(
+        title="Wohin sollen die Diagramme und Ergebnisse gespeichert werden?"
+    )
 
-            return cycles
+    root.destroy()
 
-        except ValueError:
-            print("Bitte nur ganze Zahlen eingeben.")
+    if not folder_path:
+        raise SystemExit("Kein Exportordner ausgewählt.")
+
+    return Path(folder_path)

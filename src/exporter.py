@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+from pathlib import Path
 
 
 def plot_last_cycle(
@@ -57,4 +58,106 @@ def plot_last_cycle(
     plt.legend()
     plt.tight_layout()
 
-    plt.show()
+    plt.savefig(...)
+    plt.close()
+
+def plot_last_cycle(
+    sheet_name: str,
+    last_cycle: pd.DataFrame,
+    mean_curve: pd.DataFrame,
+    output_folder: Path,
+) -> None:
+
+    plt.figure(figsize=(12, 6))
+
+    plt.plot(
+        last_cycle["distance"],
+        last_cycle["load"],
+        linewidth=1,
+        alpha=0.5,
+        label="Messdaten",
+    )
+
+    plt.plot(
+        mean_curve["distance"],
+        mean_curve["mean_force"],
+        linewidth=2,
+        label="Mittlere Kraft",
+    )
+
+    plt.title(sheet_name)
+    plt.xlabel("Distance")
+    plt.ylabel("Load")
+
+    plt.grid(True)
+    plt.legend()
+
+    plt.tight_layout()
+
+    output_file = (
+        output_folder
+        / f"{sheet_name}_Auswertung.png"
+    )
+
+    plt.savefig(
+        output_file,
+        dpi=300,
+        bbox_inches="tight",
+    )
+
+    plt.close()
+
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+def plot_last_cycle(
+    sheet_name: str,
+    last_cycle: pd.DataFrame,
+    mean_curve: pd.DataFrame,
+    output_folder: Path,
+) -> None:
+    """Save the last cycle and mean force curve as a PNG."""
+
+    plt.figure(figsize=(12, 6))
+
+    # Original measurement data
+    plt.plot(
+        last_cycle["distance"],
+        last_cycle["load"],
+        linewidth=1,
+        alpha=0.5,
+        label="Messdaten",
+    )
+
+    # Mean force curve
+    plt.plot(
+        mean_curve["distance"],
+        mean_curve["mean_force"],
+        linewidth=2,
+        label="Mittlere Kraft",
+    )
+
+    plt.title(sheet_name)
+    plt.xlabel("Distance")
+    plt.ylabel("Load")
+
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+
+    output_file = (
+        output_folder / f"{sheet_name}_Auswertung.png"
+    )
+
+    plt.savefig(
+        output_file,
+        dpi=300,
+        bbox_inches="tight",
+    )
+
+    plt.close()
+
+    print(f"Diagramm gespeichert: {output_file}")
